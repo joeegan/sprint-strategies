@@ -1,0 +1,59 @@
+martingale
+var originalBetsize = custom
+if win
+	betsize = originalBetsize
+elseif lose
+	betsize = betsize * 2
+
+anti- martingale
+var originalBetsize = custom
+if win
+	betsize = betsize * 2
+elseif lose
+	betsize = originalBetsize
+
+grand martingale
+var betsize = originalBetsize
+if win
+	betsize = originalBetsize
+elseif lose
+	betsize = betsize * 2 + orginalBetsize
+
+fibonacci
+var seq = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+var idx = 0;
+var betsize = seq[idx]
+if win
+	idx = idx - 2 || 0
+	betsize = seq[idx]
+elseif lose
+	betsize = seq[idx++]
+
+
+d'Alembert 
+?
+
+Oscar's Grind
+var betsize = originalBetsize (1)
+if win and notInProfit
+	betsize = betsize
+elseif win and inProfit
+	betsize++
+elseif lose
+	betsize = betsize
+
+
+1 -1
+1 -2
+1 -3
+1 -2
+1 -1
+1 0
+1 1
+2 -2
+2 0
+2 2
+3 5
+4 1
+4 5
+5 

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+   <script src="./lib/jquery-2.1.3.min.js"></script>
+   <script src="./lib/highstock.js"></script>
+   <script src="./lib/exporting.js"></script>
+   <script src="./lib/lightstreamer.js"></script>
+   <script src="./lib/rsvp-latest.js"></script>
+   <script src="./lib/pubsub.js"></script>
+   <script src="./lib/sdk.js"></script>
+   <script src="./lib/handlebars-v3.0.0.js"></script>
+   <script src="./lib/numeral.min.js"></script>
+   <script src="./lib/numeral.languages.min.js"></script>
+   <script src="./i18n.js"></script>
+   <script src="./chart.js"></script>
+   <script src="./history.js"></script>
+   <script src="./direction.js"></script>
+   <script src="./formulae.js"></script>
+   <script src="./chart-theme.js"></script>
+   <script src="./ticket.js"></script>
+   <script src="./trade.js"></script>
+   <script src="./sequence.js"></script>
+   <script src="./app.js"></script>
+   <link type="text/css" rel="stylesheet" href="lib/bootstrap.min.css">
+   <link type="text/css" rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+   <div class="container">
+
+      <div class="row header">
+         <div class="col-md-5">
+            <img src="img/logo-ig.png" height="20">
+         </div>
+         <div class="col-md-3">
+             <p>Session P&L: <span id="sessionPl" />£0.00</p>
+         </div>
+         <div class="col-md-4">
+            <h1>Sprint Strategy Trader</h1>
+         </div>
+      </div>
+      <div class="row hidden warn">
+         <div class="col-md-12">
+            <p class="bg-danger"></p>
+         </div>
+      </div>
+      <div class="row">
+         <!-- <p>Overall Profit &amp; loss: <span id="overallPl">0</span></p> -->
+         <!-- <p>Overall Sprint Strategy Profit &amp; Loss: <span id="overallSprintStrategyPl">0</span></p> -->
+         <!-- <p>This session's Profit &amp; Loss: <span id="sessionPl">0</span></p> -->
+
+         <div class="col-md-4">
+            <form>
+               <fieldset>
+                  <div class="form-group">
+                     <label for="market">Market</label>
+                     <select id="market" class="form-control">
+                        <option>Loading...</option>
+                     </select>
+                  </div>
+                  <div class="form-group">
+                     <label for="initial-stake">Initial stake</label>
+                     <div class="input-group">
+                        <div class="input-group-addon">&pound;</div>
+                        <input type="text" class="form-control" id="initial-stake" placeholder="Enter initial stake" value="20">
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label for="trading-strategy">Trading strategy</label>
+                     <select id="trading-strategy" class="form-control">
+                        <option value="martingale">Martingale</option>
+                        <option value="grand-martingale">Grand Martingale</option>
+                     </select>
+                  </div>
+                  <div class="form-group">
+                     <label for="direction-strategy">Direction strategy</label>
+                     <select id="direction-strategy" class="form-control">
+                        <option value="BUY">Always buy</option>
+                        <option value="SELL">Always sell</option>
+                        <option value="ALTERNATE-BUY">Alternate (Starting with buy)</option>
+                        <option value="ALTERNATE-SELL">Alternate (Starting with sell)</option>
+                     </select>
+                  </div>
+                  <div class="form-group">
+                     <label for="expiry">Expiry</label>
+                     <input id="expiry" type="text" class="form-control" id="initial-stake" placeholder="Enter initial stake" value="ONE_MINUTE" disabled>
+                  </div>
+                  <div class="form-group">
+                     <label for="max-number-of-bets">Maximum number of trades</label>
+                     <input type="text" class="form-control" id="max-number-of-bets" placeholder="Infinity" value="Infinity" disabled>
+                  </div>
+                  <div class="form-group">
+                      <div class="checkbox" style="float: right;">
+                      <label for="repeat">
+                        <input type="checkbox" id="repeat"> Repeat
+                      </label>
+                    </div>
+                     <button type="submit" class="btn btn-default">Submit</button>
+                     <button class="btn btn-default" id="stop">Stop</button>
+                  </div>
+               </fieldset>
+            </form>
+         </div>
+         <div id="chart" class="col-md-8">
+            <div class="loading-chart-message"><p>Loading chart data...</p></div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-md-12">
+            <table id="history" class="table table-striped table-responsive hidden">
+               <thead>
+                  <tr>
+                     <th class="historyIndex">Sequence</th>
+                     <th class="stake">Stake</th>
+                     <th class="direction">Direction</th>
+                     <th class="openLevel">Open level</th>
+                     <th class="closeLevel">Close level</th>
+                     <th class="winLose">Outcome</th>
+                     <th class="profitLoss">Profit/Loss</th>
+                  </tr>
+               </thead>
+               <tbody></tbody>
+            </table>
+         </div>
+      </div>
+      <div id="sessionPlRow" class="row">
+         <div class="col-md-12">
+         </div>
+      </div>
+   </div>
+   <script id="trade-opened-template" type="text/x-handlebars-template">
+      <tr>
+         <td class="historyIndex">{{historyIndex}}</td>
+         <td class="stake">{{stake}}</td>
+         <td class="direction">{{direction}}</td>
+         <td class="openLevel">{{openLevel}}</td>
+         <td class="closeLevel">{{closeLevel}}</td>
+         <td class="winLose">{{winLose}}</td>
+         <td class="profitLoss">{{profitLoss}}</td>
+      </tr>
+   </script>
+   <script id="ticket-option-template" type="text/x-handlebars-template">
+      <option {{#if isSelected}}selected{{/if}} value="{{epic}}">{{instrumentName}}</option>
+   </script>
+</body>
+</html>

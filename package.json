@@ -1,0 +1,19 @@
+{
+  "name": "strategy-sprints",
+  "version": "1.0.0",
+  "scripts": {
+    "setup": "hostile set 127.0.0.1 strategy-sprints.marketdatasystems.com",
+    "start": "http-server src/ -p 777 -c-1",
+    "open": "opn http://strategy-sprints.marketdatasystems.com:777",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.iggroup.local/scm/cf15/binary-finary.git"
+  },
+  "dependencies": {
+    "hostile": "^1.0.0",
+    "http-server": "^0.7.4",
+    "opn": "^1.0.1"
+  }
+}

@@ -1,0 +1,19 @@
+In Trade Confirm poll response 'level' is actually odds, this is confusing.
+
+Without streamed OHU updates there seems to be no way to get sprint market payout.
+
+We are not aware of the maximum stake we can place on a sprint market.
+
+Ten second sprint markets allow for an enormous amount of ideas to be realised. We suggest adding them to API.
+
+The arguments returned in the LS onSubscriptionError callback are not useful.
+
+The error response keys seem to be pretty helpful this time round. We ended up making the following dictionary for common errors:
+
+	var dictionary = {
+		"errorsprintmarketcreate-positionmarket-closed": "Error: Market closed",
+		"errorsprintmarketcreate-positionorder-sizeinvalid": "Error: Order size invalid",
+		"errorpublic-apiexceeded-account-historical-data-allowance": "API Error: Historical Data Allowance exceeded"
+	}
+
+It would be nice if we didn't have to include this step, but we were able to achieve friendly response by adding them ourselves.
